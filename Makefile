@@ -17,3 +17,6 @@ linux:
 
 docker:
 	docker build . -t sidecarinjector
+
+fetch:
+	git fetch upstream

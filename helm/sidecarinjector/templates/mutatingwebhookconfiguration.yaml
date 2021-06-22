@@ -1,5 +1,9 @@
 ---
+  {{- if .Capabilities.APIVersions.Has "admissionregistration.k8s.io/v1" }}
+apiVersion: admissionregistration.k8s.io/v1
+  {{- else }}
 apiVersion: admissionregistration.k8s.io/v1beta1
+  {{- end }}
 kind: MutatingWebhookConfiguration
 metadata:
   name: {{ .Values.appname }}-webhook-cfg
@@ -13,6 +17,10 @@ webhooks:
         namespace: {{ .Values.namespace }}
         path: /mutate
     failurePolicy: Fail
+    {{- if .Capabilities.APIVersions.Has "admissionregistration.k8s.io/v1" }}
+    admissionReviewVersions: ["v1", "v1beta1"]
+    sideEffects: None
+    {{- end}}
     name: {{ .Values.appname }}.sfdc.internal
     namespaceSelector:
       matchExpressions:
